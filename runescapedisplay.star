@@ -19,8 +19,8 @@ def main():
     item_list = get_item_list(random_letter)
     number_of_items = len(item_list["items"])
     random_item_index = random.number(0, number_of_items-1)
-    title = item_list["items"][random_item_index]["name"]
-    item_name = title
+    item_name = item_list["items"][random_item_index]["name"]
+    item_price = str(item_list["items"][random_item_index]["current"]["price"]) + " gp"
     sprite_url = item_list["items"][random_item_index]["icon"]
     sprite = get_cachable_data(sprite_url)
     return render.Root(
@@ -38,7 +38,12 @@ def main():
                             content=item_name,
                             width=64,
                             font="tom-thumb",
-                        )
+                        ),
+                        render.WrappedText (
+                            content=item_price,
+                            width=64,
+                            font="tom-thumb",
+                        ),
                     ],
                 ),
             ],

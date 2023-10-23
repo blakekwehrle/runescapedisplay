@@ -12,6 +12,9 @@ RUNESCAPEAPI_ITEMSPRITE_URL = "https://secure.runescape.com/m=itemdb_oldschool/1
 PAGE_LENGTH_BY_LETTER = { 'a': 30, 'b': 40, 'c': 16, 'd': 20, 'e': 11, 'f': 8, 'g': 18, 'h': 5,
                           'i': 10, 'j': 4, 'k': 4, 'l': 7, 'm': 25, 'n': 3, 'o': 9, 'p': 13,
                           'r': 25, 's': 44, 't': 22, 'u': 5, 'v': 5, 'w': 11, 'x': 1, 'y': 3, 'z': 5}
+UP_CARROT_ICON = base64.decode("""R0lGODdhBgAFAHcAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFQAAAACwAAAAABgAFAIEAAABZwTXW8mQAAAACCQRkJoEX35KMBQAh+QQJQAAAACwAAAAABgAFAIEAAABZwTXW8mQAAAACCQRkJoEX35KMBQAh+QQFQAAAACwAAAAABgAFAIEAAABZwTXW8mQAAAACCoQiYMGp/5w6rgAAIfkECUAAAAAsAAAAAAYABQCBAAAAWcE11vJkAAAAAgqEImDBqf+cOq4AACH5BAVAAAAALAAAAAAGAAUAgQAAAFnBNdbyZAAAAAIJVC6gu9nhDAIFACH5BAlAAAAALAAAAAAGAAUAgQAAAFnBNdbyZAAAAAIJVC6gu9nhDAIFACH5BAVAAAAALAAAAAAGAAUAgQAAAFnBNdbyZAAAAAIJhG+CEgocGjoFACH5BAlAAAAALAAAAAAGAAUAgQAAAFnBNdbyZAAAAAIJhG+CEgocGjoFADs=""")
+DOWN_CARROT_ICON = base64.decode("""R0lGODdhBgAFAHcAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFBQAAACwAAAAABgAFAIEAAADuCwv4cHAAAAACCIQvoWLJeKIpACH5BAkFAAAALAAAAAAGAAUAgQAAAO4LC/hwcAAAAAIIhC+hYsl4oikAIfkEBQUAAAAsAAAAAAYABQCBAAAA7gsL+HBwAAAAAgkEZKkSjReekQUAIfkECQUAAAAsAAAAAAYABQCBAAAA7gsL+HBwAAAAAgkEZKkSjReekQUAIfkEBQUAAAAsAAAAAAYABQCBAAAA7gsL+HBwAAAAAgqEIqC2rRfQk6AAACH5BAkFAAAALAAAAAAGAAUAgQAAAO4LC/hwcAAAAAIKhCKgtq0X0JOgAAAh+QQFBQAAACwAAAAABgAFAIEAAADuCwv4cHAAAAACClQuAJa6DpVBoAAAIfkECQUAAAAsAAAAAAYABQCBAAAA7gsL+HBwAAAAAgpULgCWug6VQaAAADs=""")
+LINE_ICON = base64.decode("""R0lGODdhBgAFAHcAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFCgAAACwAAAAABgAFAIAAAABw2O4CCIQPoRbXCE8BACH5BAkKAAAALAAAAAAGAAUAgAAAAHDY7gIIhA+hFtcITwEAIfkEBQoAAAAsAAAAAAYABQCAAAAAcNjuAgeEb6Gw6F8AACH5BAkKAAAALAAAAAAGAAUAgAAAAHDY7gIHhG+hsOhfAAAh+QQFCgAAACwAAAAABgAFAIAAAABw2O4CB4R/EaaJbwoAIfkECQoAAAAsAAAAAAYABQCAAAAAcNjuAgeEfxGmiW8KACH5BAUKAAAALAAAAAAGAAUAgAAAAHDY7gIIhI9xocAIQQEAIfkECQoAAAAsAAAAAAYABQCAAAAAcNjuAgiEj3GhwAhBAQAh+QQFCgAAACwAAAAABgAFAIAAAABw2O4CB4SPGQHLeQoAIfkECQoAAAAsAAAAAAYABQCAAAAAcNjuAgeEjxkBy3kKACH5BAUKAAAALAAAAAAGAAUAgAAAAHDY7gIIhI8WtxCfTgEAIfkECQoAAAAsAAAAAAYABQCAAAAAcNjuAgiEjxa3EJ9OAQAh+QQFCgAAACwAAAAABgAFAIAAAABw2O4CB4SPFpGw3AoAIfkECQoAAAAsAAAAAAYABQCAAAAAcNjuAgeEjxaRsNwKACH5BAUKAAAALAAAAAAGAAUAgAAAAHDY7gIHhB+HqRDcCgAh+QQJCgAAACwAAAAABgAFAIAAAABw2O4CB4Qfh6kQ3AoAIfkEBQoAAAAsAAAAAAYABQCAAAAAcNjuAgeEH3GoC+0KACH5BAkKAAAALAAAAAAGAAUAgAAAAHDY7gIHhB9xqAvtCgAh+QQFCgAAACwAAAAABgAFAIAAAABw2O4CB4QfeRjrWwAAIfkECQoAAAAsAAAAAAYABQCAAAAAcNjuAgeEH3kY61sAADs=""")
 
 def main():
     random_letter_index = random.number(0, 24)
@@ -20,9 +23,16 @@ def main():
     number_of_items = len(item_list["items"])
     random_item_index = random.number(0, number_of_items-1)
     item_name = item_list["items"][random_item_index]["name"]
+    item_trend = item_list["items"][random_item_index]["today"]["trend"]
     item_price = str(item_list["items"][random_item_index]["current"]["price"]) + " gp"
     sprite_url = item_list["items"][random_item_index]["icon"]
     sprite = get_cachable_data(sprite_url)
+    if(item_trend == "positive"):
+        selected_image = UP_CARROT_ICON
+    elif(item_trend == "neutral"):
+        selected_image = DOWN_CARROT_ICON
+    else:
+        selected_image = LINE_ICON
     return render.Root(
         child = render.Stack(
             children = [
@@ -39,11 +49,18 @@ def main():
                             width=64,
                             font="tom-thumb",
                         ),
-                        render.WrappedText (
-                            content=item_price,
-                            width=64,
-                            font="tom-thumb",
-                        ),
+                        render.Row(
+                            main_align = "space_between",
+                            cross_align = "center",
+                            children = [
+                                render.Image(src=selected_image),
+                                render.WrappedText (
+                                    content=item_price,
+                                    width=64,
+                                    font="tom-thumb",
+                                ),
+                            ],
+                        )
                     ],
                 ),
             ],

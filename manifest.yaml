@@ -1,0 +1,8 @@
+---
+id: osrs-runescape-grand-exchange
+name: OSRS Runescape Grand Exchange
+summary: Shows item information of OSRS Runescape's Grand Exchange
+desc: Shows information of OSRS Runescape items using the Runescape API.
+author: blakekwehrle
+fileName: osrs_runescape_grand_exchange.star
+packageName: osrsrunescapegrandexchange
